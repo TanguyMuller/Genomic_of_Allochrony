@@ -24,7 +24,7 @@ freebayes -f $PATH_TO_ASSEMBLY -L $BAMLIST -r $REGION \
   -A sample.bed | \
 gzip -c > res_vcf/${REGION}.freebayes.vcf.gz
 
-### Command to run variant_calling_with_freebayes.sh
+### Command to run 3_variant_calling_with_freebayes.sh
 
 # Note : the format of the regions.chunks file is chr:start-end
-#awk '{print "sbatch -J FBch"FNR" --output FBch"FNR" variant_calling_with_freebayes.sh portugal.bam.list",$1}' regions.chunks
+#awk '{print "sbatch -J FBch"FNR" --output FBch"FNR" 3_variant_calling_with_freebayes.sh portugal.bam.list",$1}' regions.chunks
