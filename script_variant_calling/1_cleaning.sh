@@ -15,5 +15,5 @@ rm $QUERY_NAME.fq_1.gz $QUERY_NAME.fq_2.gz
 ### Command to run cleaning.sh
 
 #ls *fq_1.gz |\
-#awk '{split($1,tmp,"\.");{print "sbatch -J",tmp[1],"--output",tmp[1],"cleaning.sh",tmp[1]}}' - |\
+#awk '{split($1,tmp,"\.");{print "sbatch -J",tmp[1],"--output",tmp[1],"1_cleaning.sh",tmp[1]}}' - |\
 #bash
