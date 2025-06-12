@@ -12,7 +12,7 @@ fastp -i $QUERY_NAME.fq_1.gz -I $QUERY_NAME.fq_2.gz -o $QUERY_NAME.clean.fq_1.gz
 
 rm $QUERY_NAME.fq_1.gz $QUERY_NAME.fq_2.gz
 
-### Command to run cleaning.sh
+### Command to run 1_cleaning.sh
 
 #ls *fq_1.gz |\
 #awk '{split($1,tmp,"\.");{print "sbatch -J",tmp[1],"--output",tmp[1],"1_cleaning.sh",tmp[1]}}' - |\
