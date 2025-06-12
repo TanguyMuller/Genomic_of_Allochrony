@@ -42,7 +42,7 @@ samtools stats --threads $SAMTOOLS_THREADS $STUDY_NAME.q20.dedup.bam > $STUDY_NA
 
 rm $STUDY_NAME.q20.sorted.bam
 
-### Command to run mapping.sh
+### Command to run 2_mapping.sh
 
 #ls *fq_1.gz |\
 #awk 'NR==FNR { names[NR]=$0; next } {split($1,tmp,"."); print "sbatch -J",tmp[1],"--output",tmp[1],"2_mapping.sh",tmp[1],names[FNR] }' sample_portugal.list - |\
