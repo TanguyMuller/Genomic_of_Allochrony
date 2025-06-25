@@ -7,6 +7,7 @@ BAMLIST=$1
 REGION=$2
 PATH_TO_ASSEMBLY=/path/to/assembly/PPM.fa
 
+
 # FreeBayes is slower than other variant callers
 # It is run on 1 Mb non-overlapping regions
 
@@ -27,4 +28,6 @@ gzip -c > res_vcf/${REGION}.freebayes.vcf.gz
 ### Command to run 3_variant_calling_with_freebayes.sh
 
 # Note : the format of the regions.chunks file is chr:start-end
-#awk '{print "sbatch -J FBch"FNR" --output FBch"FNR" 3_variant_calling_with_freebayes.sh portugal.bam.list",$1}' regions.chunks
+#awk '{print "sbatch -J FBch"FNR" --output FBch"FNR" 3_variant_calling_with_freebayes.sh all.portugal.bam.list",$1}' regions.chunks
+#awk '{print "sbatch -J FBch"FNR" --output FBch"FNR" 3_variant_calling_with_freebayes.sh pool.portugal.bam.list",$1}' regions.chunks
+#awk '{print "sbatch -J FBch"FNR" --output FBch"FNR" 3_variant_calling_with_freebayes.sh ind.portugal.bam.list",$1}' regions.chunks
