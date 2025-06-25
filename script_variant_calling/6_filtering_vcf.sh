@@ -43,7 +43,7 @@ BEGIN {
     ENVIRON["LC_ALL"] = "C"; 
 } 
 { 
-    # Gestion des en-têtes
+    # Handling VCF headers
     if (substr($1, 1, 1) == "#") { 
         if (/fileformat/ || /contig/ || /ID=RO/ || /ID=AO/ || /ID=GT,/ || /ID=GQ/ || /ID=GL/ || /ID=DP,/ || /ID=AD/) { 
             print $0 "\n"; 
@@ -53,7 +53,7 @@ BEGIN {
             header_found = 1; 
         } 
     } 
-    # Traitement des lignes de données
+    # Individual data
     else if (header_found) { 
         # Initialisation des indices de champs
         if (!fields_initialized) { 
@@ -73,7 +73,7 @@ BEGIN {
             fields_initialized = 1; 
         } 
         
-        # Calcul de la somme des DP pour tous les individus
+        # Sum of DP for all individuals
         dp_sum = 0; 
         for (j = 10; j <= NF; j++) { 
             split($j, tmp, ":"); 
@@ -83,10 +83,9 @@ BEGIN {
             }
         } 
         
-        # Extraction et réorganisation du champ INFO
+        # Extracting and reorganizing the INFO field
         split($8, info, ";");
         
-        # Vérifier que les indices info existent
         info_str = "";
         if (length(info) >= 6) {
             info_str = info[6];
@@ -97,7 +96,6 @@ BEGIN {
             info_ab = info[29];
         }
         
-        # Construire le champ INFO
         info_out = info_str;
         if (info_str != "") {
             info_out = info_out ";";
@@ -109,7 +107,7 @@ BEGIN {
         
         print $1, $2, $3, $4, $5, $6, ".", info_out, out_fmt_field; 
         
-        # Extraction des valeurs individuelles
+        # Extraction of individual data
         for (j = 10; j <= NF; j++) { 
             split($j, sample_data, ":"); 
             
@@ -121,7 +119,6 @@ BEGIN {
             ao_val = ".";
             gl_val = ".";
             
-            # Récupération des valeurs si elles existent
             if (gt_field > 0 && length(sample_data) >= gt_field && sample_data[gt_field] != "") {
                 gt_val = sample_data[gt_field];
             }
@@ -146,7 +143,6 @@ BEGIN {
                 gl_val = sample_data[gl_field];
             }
             
-            # Construire la chaîne de sortie pour cet échantillon
             print "\t" gt_val ":" dp_val ":" ad_val ":" ro_val ":" ao_val ":" gl_val;
         } 
         print "\n"; 
