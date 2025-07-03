@@ -186,9 +186,9 @@ echo "End filtering"
 
 ### Command to run 6_filtering_vcf.sh
 
-#bash 6_filtering_vcf_sh all.portugal.freebayes.vcf.gz Auto
-#bash 6_filtering_vcf_sh pool.portugal.freebayes.vcf.gz Auto
-#bash 6_filtering_vcf_sh ind.portugal.freebayes.vcf.gz Auto
-#bash 6_filtering_vcf_sh all.portugal.freebayes.chrZ.vcf.gz chrZ
-#bash 6_filtering_vcf_sh all.portugal.freebayes.chrZ.vcf.gz chrZ
-#bash 6_filtering_vcf_sh all.portugal.freebayes.chrZ.vcf.gz chrZ
+#bash 6_filtering_vcf.sh all.portugal.freebayes.vcf.gz Auto
+#bash 6_filtering_vcf.sh pool.portugal.freebayes.vcf.gz Auto
+#bash 6_filtering_vcf.sh ind.portugal.freebayes.vcf.gz Auto
+#bash 6_filtering_vcf.sh all.portugal.freebayes.chrZ.vcf.gz chrZ
+#bash 6_filtering_vcf.sh all.portugal.freebayes.chrZ.vcf.gz chrZ
+#bash 6_filtering_vcf.sh all.portugal.freebayes.chrZ.vcf.gz chrZ
