@@ -1,6 +1,5 @@
 #!/bin/bash
 # Script for pruning VCF by linkage disequilibrium (LD)
-# Creates prune.in and prune.out files using PLINK from MAF-filtered VCF files
 
 # Input arguments
 FILE=$1
