@@ -1,5 +1,6 @@
 #!/bin/bash
 # Script for pruning VCF by linkage disequilibrium (LD)
+# NOTE: Start with ind.portugal files to create prune.in and prune.out files using PLINK
 
 # Input arguments
 FILE=$1
