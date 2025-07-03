@@ -1,8 +1,6 @@
 #!/bin/bash
 # Script for pruning VCF by linkage disequilibrium (LD)
 # Creates prune.in and prune.out files using PLINK from MAF-filtered VCF files
-# Input: MAF-filtered VCF files (ind.portugal.freebayes_filt_maf005.vcf.gz for autosomes 
-#        and ind.portugal.freebayes.chrZ_filt_maf005.vcf.gz for chromosome Z)
 
 # Input arguments
 FILE=$1
@@ -33,8 +31,8 @@ echo "Number of unlinked SNPs: $(bcftools view -H ${base_name}_ldprune.vcf.gz | 
 
 ### Commands to run 4_ld_pruning.sh
 #bash 4_ld_pruning.sh ind.portugal.freebayes_filt_maf005.vcf.gz Auto
-#bash 4_ld_pruning.sh ind.portugal.freebayes_filt_maf005.vcf.gz chrZ
+#bash 4_ld_pruning.sh ind.portugal.freebayes.chrZ_filt_maf005.vcf.gz chrZ
 #bash 4_ld_pruning.sh all.portugal.freebayes_filt_maf005.vcf.gz Auto
-#bash 4_ld_pruning.sh all.portugal.freebayes_filt_maf005.vcf.gz chrZ
+#bash 4_ld_pruning.sh all.portugal.freebayes.chrZ_filt_maf005.vcf.gz chrZ
 #bash 4_ld_pruning.sh pool.portugal.freebayes_filt_maf005.vcf.gz Auto
-#bash 4_ld_pruning.sh pool.portugal.freebayes_filt_maf005.vcf.gz chrZ
+#bash 4_ld_pruning.sh pool.portugal.freebayes.chrZ_filt_maf005.vcf.gz chrZ
