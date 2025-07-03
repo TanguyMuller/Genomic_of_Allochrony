@@ -179,6 +179,9 @@ fi
 # Removing temporary files
 rm -f tmp.${output_file}_half.vcf.gz* tmp.${output_file}_half_reduce.vcf.gz* 
 
+# Rename the file for simplicity
+mv ${output_file}_0pct_missing_dp_filtered.vcf.gz ${output_file}.vcf.gz
+
 echo "End filtering"
 
 ### Command to run 6_filtering_vcf.sh
