@@ -1,6 +1,6 @@
 #!/bin/bash 
 
-# Script for Admixture analysis
+# Script to Admixture analysis
 
 vcf=$1
 base_name=$(basename "${vcf}" .vcf.gz)
