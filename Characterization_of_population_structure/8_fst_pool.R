@@ -1,3 +1,4 @@
+#!/usr/bin/env Rscript
 # Script to calculates pairwise FST between populations for autosomes and Z chromosome
 # and generates phylogenetic trees and exports FST matrices
 
@@ -93,3 +94,6 @@ dev.off()
 # Export FST matrices to Excel files
 write.xlsx(fst.Auto.tree, file = "matrice_fst_auto.xlsx")
 write.xlsx(fst.Z.tree, file = "matrice_fst_Z.xlsx")
+
+###Command to run 8_fst_pool.R
+#Rscript 8_fst_pool.R pool pool.portugal.freebayes_filt_maf005_ldprune.vcf.gz pool.portugal.freebayes.chrZ_filt_maf005_ldprune.vcf.gz
