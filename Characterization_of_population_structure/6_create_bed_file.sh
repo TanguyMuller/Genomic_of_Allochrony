@@ -17,4 +17,4 @@ mv $base_name.bim.tmp $base_name.bim
 
 ### Command
 #sbatch 6_create_bed_file.sh ind.portugal.freebayes_filt_maf005_ldprune.vcf.gz Auto
-#sbatch 6_create_bed_file.sh ind.portugal.freebayes.chrZ_filt_maf005_ldprune.vcf.gz chrZ 
+#sbatch 6_create_bed_file.sh ind.portugal.freebayes.chrZ_filt_maf005_ldprune.vcf.gz chrZ
