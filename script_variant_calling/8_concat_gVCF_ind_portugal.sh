@@ -1,4 +1,4 @@
-### Script for concat vcf file 
+### Script to concat vcf file 
 
 #! /bin/bash
 
