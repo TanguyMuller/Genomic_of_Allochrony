@@ -1,11 +1,11 @@
 #!/bin/bash -l
 #SBATCH --ntasks 1
 #SBATCH --mem=32G
-# Script to run RZooROH analyses. Need to run 5_launcher_RZooRoH_analyse.sh to run this code.
-# Note: This code was run on genobioinfo cluster 
+# Script to run RZooROH analyses. 
+# This code is launch with 5_launcher_RZooRoH_analyse.sh.
+# Note: This code was run on genobioinfo cluster for run in parallel for each population
 
-
-# set sofware genobioinfo
+# Set sofware genobioinfo
 module purge
 module load statistics/R/4.3.0
 module load bioinfo/VCFtools/0.1.16
@@ -20,7 +20,7 @@ base_name=$(basename "${dataset}" .vcf.gz)
 mkdir -p vcf
 
 # Create a VCF for each population
-bcftools view -S ${path_list}/${pop}_ind.list -T ${path_list}/positions_${base_name}_10covperpool.txt --force-samples -Oz ${dataset} > vcf/${pop}_${base_name}.vcf.gz
+bcftools view -S ${path_list}/${pop}_ind.list -T ${path_list}/positions_${base_name}.txt --force-samples -Oz ${dataset} > vcf/${pop}_${base_name}.vcf.gz
 
 # Convert VCF file in oxford format for RZooRoH
 plink --vcf vcf/${pop}_${base_name}.vcf.gz --recode --out vcf/${pop}_${base_name} --double-id --chr-set 49 --allow-extra-chr
