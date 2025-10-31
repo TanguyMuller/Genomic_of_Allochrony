@@ -4,7 +4,7 @@
 # for RZooRoH analyses.
 #
 # Command
-# bash 4_freq_alleliq_pool.sh ind.vcf.gz 
+# bash 4_freq_alleliq_pool.sh ind_masked_HWE.vcf.gz
 
 vcf=$1
 path_list="/your/path/to/list"
@@ -22,7 +22,7 @@ Rscript ${path_script}/freq_alleliq_pool_exp.R ${vcf}
 
 # Remove sites with fewer than 10 reads per pool
 echo "Filtering SNPs with at least 10 reads per pool..."
-bcftools view -T ${path_list}/positions_${vcf}_10covperpool.txt -Oz ${vcf} > ${base_name}_10covperpool.vcf.gz
+bcftools view -T ${path_list}/positions_${base_name}_10covperpool.txt -Oz ${vcf} > ${base_name}_10covperpool.vcf.gz
 bcftools index ${base_name}_10covperpool.vcf.gz
 
 # Number of SNPs retained for RZooRoH analyses
