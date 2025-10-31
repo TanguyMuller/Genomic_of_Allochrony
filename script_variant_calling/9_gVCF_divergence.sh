@@ -1,3 +1,5 @@
+### Script to create gvcf file with the 2 most covered individuals of LSP, LWP, FU and outgroups for each chromosome
+
 #! /bin/bash
 
 BAMLIST=$1
