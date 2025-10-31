@@ -18,7 +18,7 @@ mkdir -p GL
 
 # Run the R script that computes allele frequencies per pool
 echo "Estimating allele frequencies for ${vcf}..."
-Rscript ${path_script}/freq_alleliq_pool_exp.R ${vcf}
+Rscript ${path_script}/freq_alleliq_pool_exp.R ${base_name}
 
 # Remove sites with fewer than 10 reads per pool
 echo "Filtering SNPs with at least 10 reads per pool..."
