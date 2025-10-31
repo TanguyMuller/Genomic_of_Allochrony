@@ -18,17 +18,17 @@ k=as.integer(args[1])
 j=k+as.numeric(args[2])-1
 for (seed in k:j) {
 	nsample=1 ; 
-	nchr=1000L ; chr_length=1e4
-	lambda.cov=50 ; eps=0.001
+	nchr=1000L ; chr_length=1e4 #1,000 chromosome of 10,000 pb
+	lambda.cov=50 ; eps=0.001 #parameters for simulate pool data
 	maf.thr=0.00 ; min.rc=2
 	exp.eps=0.01 ; nthreads=1
 	set.seed(seed)
 
-	run.simu_3Di_A<-function(Ne_ancpp,Ne_fu,Ne_wp,Ne_sp,Ne_sp_found,Ne_wp_found,Ne_fu_found,Ne_bot_sp,Ne_bot_wp,Ne_bot_fu,
+	run.simu_concomitent_div<-function(Ne_ancpp,Ne_fu,Ne_wp,Ne_sp,Ne_sp_found,Ne_wp_found,Ne_fu_found,Ne_bot_sp,Ne_bot_wp,Ne_bot_fu,
 							tsplit_PP,tsplit_L,m_spwp_anc,m_spwp_rec,m_spfu_anc,m_wpfu_anc,m_spfu_rec,m_wpfu_rec,
 							n_sp,n_wp,n_fu,nchr,chr_length,min.rc,maf.thr,seed,n_cpu,seed_dr){    
 	  
-	  # Simulate with msprime and output a genotype mtrix
+	  # First run simulation for have count data
 	  G=simu_3Di_A(Ne_ancpp=Ne_ancpp,Ne_fu=Ne_fu,Ne_wp=Ne_wp,Ne_sp=Ne_sp,Ne_sp_found=Ne_sp_found,Ne_wp_found=Ne_wp_found,Ne_fu_found=Ne_fu_found,
 	               Ne_bot_sp=Ne_bot_sp,Ne_bot_wp=Ne_bot_wp,Ne_bot_fu=Ne_bot_fu,m_spfu_rec=m_spfu_rec,m_wpfu_rec=m_wpfu_rec,
 	               tsplit_PP=tsplit_PP,tsplit_L=tsplit_L, m_spwp_anc=m_spwp_anc,m_spwp_rec=m_spwp_rec,m_spfu_anc=m_spfu_anc,m_wpfu_anc=m_wpfu_anc,
