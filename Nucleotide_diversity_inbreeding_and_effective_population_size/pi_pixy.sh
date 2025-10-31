@@ -1,10 +1,14 @@
 #!/bin/bash
+# Script to calcul Pi for each chromosome
 
-### Calcul of Pi using pixy
 # Extraire le nom du chromosome
 chr=$(basename "$i" | cut -d'.' -f2)
+
+# Créer un dossier par chromosome
 mkdir -p /home/mullerta/work/SP_WP/Analyses/Nucleotide_diversity/"$chr"
+
 # Indexer le fichier VCF
+gvcf="Portugal.vcf.gz"
 tabix -p vcf "${i}"
 
 # Exécuter la commande pixy
