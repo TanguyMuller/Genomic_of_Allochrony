@@ -1,4 +1,4 @@
-# Script for generate reference table
+# Script for generate reference table of recent_div scenario
 ###module load statistics/R/4.3.0
 ###module load devel/python/Python-3.7.9
 
