@@ -1,3 +1,5 @@
+### Script for create gVCF file of each chr 
+
 #! /bin/bash
 
 BAMLIST=$1
