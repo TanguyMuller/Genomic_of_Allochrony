@@ -1,25 +1,22 @@
+# Script for generate reference table of concomitent_div scenario
 ###module load statistics/R/4.3.0
 ###module load devel/python/Python-3.7.9
 
 library(reticulate)
-library(poolfstat, lib.loc="/home/tmuller/R/x86_64-pc-linux-gnu-library/4.3")
+library(poolfstat)
 library(KScorrect)
 library(Rcpp)
 #library(progress)
 #library(doParallel)
 use_python("/tools/devel/python/Python-3.7.9/bin/python")
-source_python(file = "simu_SP_WP.py")
+source_python(file = "simu.py")
 source_python(file = "compute_stat.py")
-#sourceCpp("simu_err.cpp")
-#source("simu_err.R")
 
 args <- commandArgs(trailingOnly = TRUE)
 
 k=as.integer(args[1])
 j=k+as.numeric(args[2])-1
 for (seed in k:j) {
-	
-	# Scen 3Di A
 	nsample=1 ; 
 	nchr=1000L ; chr_length=1e4
 	lambda.cov=50 ; eps=0.001
