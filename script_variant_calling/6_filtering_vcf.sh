@@ -1,3 +1,5 @@
+### Script for filt raw vcf files 
+
 #!/bin/bash -l
 
 # setting vcf file name
