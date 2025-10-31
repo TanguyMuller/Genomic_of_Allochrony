@@ -19,7 +19,7 @@ j=k+as.numeric(args[2])-1
 for (seed in k:j) {
 	nsample=1 ; 
 	nchr=1000L ; chr_length=1e4 #1,000 chromosome of 10,000 pb
-	lambda.cov=50 ; eps=0.001 #parameters for simulate pool data
+	lambda.cov=50 ; eps=0.001 #parameter for simulate pool data
 	maf.thr=0.00 ; min.rc=2
 	exp.eps=0.01 ; nthreads=1
 	set.seed(seed)
@@ -29,13 +29,13 @@ for (seed in k:j) {
                 		 m_spwp_anc,m_spwp_rec,m_spfu_anc,m_spfu_rec,m_wpfu_anc,m_wpfu_rec,
 						 n_sp,n_wp,n_fu,nchr,chr_length,min.rc,maf.thr,seed,n_cpu,seed_dr){    
 
-    # First run simulation for have count data
+    # First run simulaton for have count data
 	G = simu_recent_div(Ne_ancpp=Ne_ancpp,Ne_fu=Ne_fu,Ne_wp=Ne_wp,Ne_sp=Ne_sp,Ne_sp_found=Ne_sp_found,Ne_wp_found=Ne_wp_found,Ne_fu_ancfound=Ne_fu_ancfound,Ne_fu_anc=Ne_fu_anc,Ne_wp_anc=Ne_wp_anc,
 	               Ne_bot_sp=Ne_bot_sp,Ne_bot_wp=Ne_bot_wp,Ne_bot_fu=Ne_bot_fu,Ne_wp_ancfound=Ne_wp_ancfound,m_spfu_rec=m_spfu_rec,m_wpfu_rec=m_wpfu_rec,m_ancpp=m_ancpp,
 	               tsplit_PP=tsplit_PP,tsplit_WP=tsplit_WP,t_bot=t_bot,m_spwp_anc=m_spwp_anc,m_spwp_rec=m_spwp_rec,m_spfu_anc=m_spfu_anc,m_wpfu_anc=m_wpfu_anc,
 		       n_sp=n_sp,n_wp=n_wp,n_fu=n_fu,nchr=nchr,chr_length=chr_length,seed=seed,n_cpu=nthreads)
 	  
-    # Remove non bialleliq sites
+    # Remove non biallelic sites
     G <- subset(G, !rowSums(G == 2 | G == 3) > 0)
 
     # Index populations colums
@@ -43,7 +43,7 @@ for (seed in k:j) {
 	  wp.idx=(2*n_sp+1):(2*(n_sp+n_wp))
 	  fu.idx=(2*(n_sp+n_wp)+1):(2*(n_sp+n_wp+n_fu))
 
-    # Create a countdata object for poolfstats
+    # Create a countdata object to simulate read counts using the countdata object
 	counts=new("countdata")
     counts@nsnp=nrow(G) ;  counts@npops=3
 	counts@popnames=c("LSP","LWP","FU")
@@ -59,7 +59,7 @@ for (seed in k:j) {
                                                    maf.thr=maf.thr,min.rc=min.rc,genome.size=(chr_length*nchr))
 	pooldata=pooldata.subset(pool, min.cov.per.pool=10)
 
-    # Summary statistic on simulate pool data
+    # Calculating differents summary stats on pools
 	pool.fstats=compute.fstats(pooldata,verbose=FALSE)
 	fst.id=pool.fstats@fst.values$Estimate
 	heteros=pool.fstats@heterozygosities$Estimate
@@ -78,7 +78,7 @@ for (seed in k:j) {
     pfix.alt=c(mean(alt.SP==0),mean(alt.WP==0),mean(alt.FU==0))
     pfix.ref=c(mean(alt.SP==1),mean(alt.WP==1),mean(alt.FU==1))	  
 
-    # Simulate individual data for summary statistics on individual data
+    # Simulate individual data for estimate summary statistics on simulate individual data
 	simu_recent_div_ind(Ne_ancpp=Ne_ancpp,Ne_fu=Ne_fu,Ne_wp=Ne_wp,Ne_sp=Ne_sp,Ne_sp_found=Ne_sp_found,Ne_wp_found=Ne_wp_found,Ne_fu_ancfound=Ne_fu_ancfound,Ne_fu_anc=Ne_fu_anc,Ne_wp_anc=Ne_wp_anc,
                         Ne_bot_sp=Ne_bot_sp,Ne_bot_wp=Ne_bot_wp,Ne_bot_fu=Ne_bot_fu,Ne_wp_ancfound=Ne_wp_ancfound,m_spfu_rec=m_spfu_rec,m_wpfu_rec=m_wpfu_rec,m_ancpp=m_ancpp,
                         tsplit_PP=tsplit_PP,tsplit_WP=tsplit_WP,t_bot=t_bot,m_spwp_anc=m_spwp_anc,m_spwp_rec=m_spwp_rec,m_spfu_anc=m_spfu_anc,m_wpfu_anc=m_wpfu_anc,
@@ -324,20 +324,20 @@ for (seed in k:j) {
             sfsfu <- rep("NA",21)
           }
 	  
-	system(paste0("rm SP_",seed,".txt WP_",seed,".txt FU_",seed,".txt SP_",seed,".TajimaD.txt WP_",seed,".TajimaD.txt FU_",seed,".TajimaD.txt SP_",
-	seed,".SFS.txt WP_",seed,".SFS.txt FU_",seed,".SFS.txt"))
-	tmp.out=c(fst.wc,fst.id,heteros,hetsp,hetwp,hetfu,f2,f3,pfix,pfix.alt,pfix.ref,TajDsp,TajDwp,TajDfu,stat_uhl_spwp_vec,stat_uhl_spfu_vec,stat_uhl_wpfu_vec,sfssp,sfswp,sfsfu)
+	 system(paste0("rm SP_",seed,".txt WP_",seed,".txt FU_",seed,".txt SP_",seed,".TajimaD.txt WP_",seed,".TajimaD.txt FU_",seed,".TajimaD.txt SP_",
+	 seed,".SFS.txt WP_",seed,".SFS.txt FU_",seed,".SFS.txt"))
+	 tmp.out=c(fst.wc,fst.id,heteros,hetsp,hetwp,hetfu,f2,f3,pfix,pfix.alt,pfix.ref,TajDsp,TajDwp,TajDfu,stat_uhl_spwp_vec,stat_uhl_spfu_vec,stat_uhl_wpfu_vec,sfssp,sfswp,sfsfu)
 	  
-	SP_classes <- paste("SPclasse", 0:50, sep = "")
-	WP_classes <- paste("WPclasse", 0:36, sep = "")
-	FU_classes <- paste("FUclasse", 0:20, sep = "")
-	names(tmp.out)=c("FSTwc","FSTidSPWP","FSTidSPFU","FSTidWPFU","HetSP","HetWP","HetFU","het.indSP","het.indWP","het.indFU","f2SPWP","f2SPFU",
-	"f2WPFU","f3SP","f3WP","f3FU","PfixSP","PfixWP","PfixFU","Pfix.altSP","Pfix.altWP","Pfix.altFU","Pfix.refSP","Pfix.refWP","Pfix.refFU",
-	"DTajimaSP","DTajimaWP","DTajimaFU",'Rf_stat_pop_spwp','Rs_stat_pop_spwp','Wx2s1_stat_pop_spwp','Wx1s2_stat_pop_spwp','Wx1F_stat_pop_spwp','Wx2F_stat_pop_spwp','Wx1_new_stat_pop_spwp',
-	'Wx2_new_stat_pop_spwp','Wx1F_new_stat_pop_spwp','Wx2F_new_stat_pop_spwp','Rf_stat_pop_spfu','Rs_stat_pop_spfu','Wx2s1_stat_pop_spfu','Wx1s2_stat_pop_spfu','Wx1F_stat_pop_spfu',
-	'Wx2F_stat_pop_spfu','Wx1_new_stat_pop_spfu','Wx2_new_stat_pop_spfu','Wx1F_new_stat_pop_spfu','Wx2F_new_stat_pop_spfu','Rf_stat_pop_wpfu','Rs_stat_pop_wpfu','Wx2s1_stat_pop_wpfu',
-	'Wx1s2_stat_pop_wpfu','Wx1F_stat_pop_wpfu','Wx2F_stat_pop_wpfu','Wx1_new_stat_pop_wpfu','Wx2_new_stat_pop_wpfu','Wx1F_new_stat_pop_wpfu','Wx2F_new_stat_pop_wpfu',SP_classes,WP_classes,FU_classes)
-	tmp.out
+	 SP_classes <- paste("SPclasse", 0:50, sep = "")
+	 WP_classes <- paste("WPclasse", 0:36, sep = "")
+	 FU_classes <- paste("FUclasse", 0:20, sep = "")
+	 names(tmp.out)=c("FSTwc","FSTidSPWP","FSTidSPFU","FSTidWPFU","HetSP","HetWP","HetFU","het.indSP","het.indWP","het.indFU","f2SPWP","f2SPFU",
+	 "f2WPFU","f3SP","f3WP","f3FU","PfixSP","PfixWP","PfixFU","Pfix.altSP","Pfix.altWP","Pfix.altFU","Pfix.refSP","Pfix.refWP","Pfix.refFU",
+	 "DTajimaSP","DTajimaWP","DTajimaFU",'Rf_stat_pop_spwp','Rs_stat_pop_spwp','Wx2s1_stat_pop_spwp','Wx1s2_stat_pop_spwp','Wx1F_stat_pop_spwp','Wx2F_stat_pop_spwp','Wx1_new_stat_pop_spwp',
+	 'Wx2_new_stat_pop_spwp','Wx1F_new_stat_pop_spwp','Wx2F_new_stat_pop_spwp','Rf_stat_pop_spfu','Rs_stat_pop_spfu','Wx2s1_stat_pop_spfu','Wx1s2_stat_pop_spfu','Wx1F_stat_pop_spfu',
+	 'Wx2F_stat_pop_spfu','Wx1_new_stat_pop_spfu','Wx2_new_stat_pop_spfu','Wx1F_new_stat_pop_spfu','Wx2F_new_stat_pop_spfu','Rf_stat_pop_wpfu','Rs_stat_pop_wpfu','Wx2s1_stat_pop_wpfu',
+	 'Wx1s2_stat_pop_wpfu','Wx1F_stat_pop_wpfu','Wx2F_stat_pop_wpfu','Wx1_new_stat_pop_wpfu','Wx2_new_stat_pop_wpfu','Wx1F_new_stat_pop_wpfu','Wx2F_new_stat_pop_wpfu',SP_classes,WP_classes,FU_classes)
+	 tmp.out
 	}
 
   	# Set prior distribution
@@ -367,7 +367,7 @@ for (seed in k:j) {
 	  Ne_bot_fu[i]=rlunif(1,1,Ne_fu_anc[i], base=10)
 	}
 
-  	# Timing of divergence
+  	# Timing of divergences
   	tsplit_PP=rlunif(nsample,500,20000, base=10)
   	if(tsplit_PP[1]<2000){
 	   	tsplit_WP=rlunif(nsample,10,tsplit_PP[1]-200, base=10)
