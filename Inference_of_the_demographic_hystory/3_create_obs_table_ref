@@ -9,7 +9,7 @@ pool.list <- c("01_SP_P", "02_WP_P", "03_FU_P")
 size <- c(100, 100, 80)
 
 # VCF with pool data from the demo_vcf.vcf.gz
-pooldata <- vcf2pooldata("demo.pool.vcf.gz",
+pooldata <- vcf2pooldata("demo_pool.vcf.gz",
                     poolsizes = size,
                     poolnames = pool.list,
                     min.cov.per.pool = 10,
