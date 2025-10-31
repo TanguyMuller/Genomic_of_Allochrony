@@ -1,22 +1,23 @@
 #!/bin/bash
-# Script to calcul Pi for each chromosome
+# Script to calculate Pi for each chromosome
 
-# Extraire le nom du chromosome
-chr=$(basename "$i" | cut -d'.' -f2)
+# gCVF file
+gvcf="gVCF.portugal.vcf.gz"
 
-# Créer un dossier par chromosome
-mkdir -p /home/mullerta/work/SP_WP/Analyses/Nucleotide_diversity/"$chr"
+# Extract the chromosome name
+chr=$(basename "$gvcf" | cut -d'.' -f2)
 
-# Indexer le fichier VCF
-gvcf="Portugal.vcf.gz"
-tabix -p vcf "${i}"
+# Create a folder for each chromosome
+mkdir -p "$chr"
 
-# Exécuter la commande pixy
+# Index the VCF file
+tabix -f -p vcf "$gvcf"
+
+# Run pixy to calculate nucleotide diversity (Pi)
+# Note: population.portugal.list must be in 'ind<TAB>pop' format
 pixy --stats pi \
-   --vcf "${i}" \
-   --populations /home/mullerta/work/SP_WP/Analyses/Nucleotide_diversity/population_list/population.portugal.list \
+   --vcf "$gvcf" \
+   --populations population.portugal.list \
    --window_size 100000 \
    --n_cores 6 \
-   --output_folder /home/mullerta/work/SP_WP/Analyses/Nucleotide_diversity/"$chr"
-
-done
+   --output_folder "$chr"
