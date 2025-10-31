@@ -156,110 +156,7 @@ for (j in 1:num_repeats) {
   dev.off()
   
   cat(paste0("  -> PCA plots saved: PCA_plots/PCA_iteration_", j, ".pdf\n"))
-  
-  # ========================================================================
-  # Parameter Estimation and OOB Plots (Inferred vs Actual)
-  # ========================================================================
-  
-  params_df1 <- df1_sampled[, 1:18]
-  params_df4 <- df4_sampled[, 1:23]
-  params_df7 <- df7_sampled[, 1:23]
-  
-  common_params <- Reduce(intersect, list(names(params_df1), names(params_df4), names(params_df7)))
-  
-  cat(paste0("  Number of common parameters found: ", length(common_params), "\n"))
-  cat(paste0("  Common parameters: ", paste(common_params, collapse = ", "), "\n"))
-  
-  if (length(common_params) == 0) {
-    cat("  WARNING: No common parameters found between the 3 scenarios!\n")
-    cat("  Parameters df1: ", paste(names(params_df1), collapse = ", "), "\n")
-    cat("  Parameters df4: ", paste(names(params_df4), collapse = ", "), "\n")
-    cat("  Parameters df7: ", paste(names(params_df7), collapse = ", "), "\n")
-  } else {
-    params_to_plot <- common_params
     
-    all_params <- rbind(
-      params_df1[, params_to_plot, drop = FALSE],
-      params_df4[, params_to_plot, drop = FALSE],
-      params_df7[, params_to_plot, drop = FALSE]
-    )
-    
-    oob_plots <- list()
-    
-    for (p in 1:length(params_to_plot)) {
-      param_name <- params_to_plot[p]
-      
-      cat(paste0("    Processing parameter: ", param_name, "\n"))
-      
-      param_ref_table <- data.frame(
-        param = all_params[, param_name],
-        sumstats
-      )
-      param_ref_table <- na.omit(param_ref_table)
-      
-      tryCatch({
-        model_regrf <- regAbcrf(param ~ ., 
-                                data = param_ref_table, 
-                                ntree = 500, 
-                                paral = TRUE)
-        
-        oob_predictions <- model_regrf$model.rf$predictions
-        actual_values <- param_ref_table$param
-        
-        rmse <- sqrt(mean((oob_predictions - actual_values)^2))
-        mae <- mean(abs(oob_predictions - actual_values))
-        r_squared <- cor(oob_predictions, actual_values)^2
-        
-        model_r2 <- if(!is.null(model_regrf$model.rf$r.squared)) model_regrf$model.rf$r.squared else r_squared
-        model_nmae <- if(!is.null(model_regrf$model.rf$NMAE)) model_regrf$model.rf$NMAE else NA
-        
-        oob_df <- data.frame(
-          Actual = actual_values,
-          Predicted = oob_predictions
-        )
-        
-        subtitle_text <- paste0("R² = ", round(model_r2, 3))
-        if (!is.na(model_nmae)) {
-          subtitle_text <- paste0(subtitle_text, " | NMAE = ", round(model_nmae, 3))
-        } else {
-          subtitle_text <- paste0(subtitle_text, " | RMSE = ", round(rmse, 3))
-        }
-        
-        p_oob <- ggplot(oob_df, aes(x = Actual, y = Predicted)) +
-          geom_point(alpha = 0.5, color = "steelblue") +
-          geom_abline(intercept = 0, slope = 1, color = "red", linetype = "dashed", linewidth = 1) +
-          theme_minimal() +
-          labs(title = param_name,
-               subtitle = subtitle_text,
-               x = "Actual Parameter Value",
-               y = "Predicted (OOB) Parameter Value") +
-          theme(plot.title = element_text(hjust = 0.5, face = "bold"),
-                plot.subtitle = element_text(hjust = 0.5))
-        
-        oob_plots[[p]] <- p_oob
-        
-      }, error = function(e) {
-        cat(paste0("    Error processing parameter ", param_name, ": ", e$message, "\n"))
-        oob_plots[[p]] <- NULL
-      })
-    }
-    
-    oob_plots <- oob_plots[!sapply(oob_plots, is.null)]
-    
-    if (length(oob_plots) > 0) {
-      n_plots <- length(oob_plots)
-      n_cols <- 4
-      n_rows <- ceiling(n_plots / n_cols)
-      
-      pdf(paste0("OOB_plots/OOB_Parameters_iteration_", j, ".pdf"), 
-          width = 4 * n_cols, height = 4 * n_rows)
-      do.call(grid.arrange, c(oob_plots, ncol = n_cols))
-      dev.off()
-      
-      cat(paste0("  -> OOB plots (Inferred vs Actual) saved: OOB_plots/OOB_Parameters_iteration_", j, ".pdf\n"))
-    }
-  }
-  
   # ========================================================================
   # 10 repetitions of subsamples 10,000 simulations 
   # ========================================================================
@@ -364,4 +261,3 @@ write.xlsx(df_final, "summary_results.xlsx", overwrite = TRUE)
 
 cat("The Excel file 'summary_results.xlsx' has been successfully created!\n")
 cat(paste0("PCA plots have been saved in the folder 'PCA_plots/'\n"))
-cat(paste0("OOB plots (Inferred vs Actual) have been saved in the folder 'OOB_plots/'\n"))
