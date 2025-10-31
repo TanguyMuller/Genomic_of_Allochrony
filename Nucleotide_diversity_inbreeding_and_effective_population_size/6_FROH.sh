@@ -4,7 +4,7 @@
 for size in "100" "500";do
 	for pop in "LSP" "LWP" "FU" "VI" "VA" "CA" "TA" "GR";do
 		mkdir -p ${size}kb
-		VCF_INPUT=""
+		VCF_INPUT="ind_masked_HWE.vcf.gz"
 		OUTPUT="${size}kb/${pop}.ROH.${size}kb"
 		
 		./plink --allow-extra-chr \
