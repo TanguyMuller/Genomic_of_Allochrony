@@ -4,15 +4,15 @@
 # identified in the reference genome.
 #
 # Command
-# bash 3_filtering_RE_HO.sh input.vcf.gz Auto
+# bash 3_filtering_RE_HO.sh ind.vcf.gz Auto
 
-VCF_ALL=$1
+VCF_IND=$1
 chr=$2
-base_name=$(basename "$VCF_ALL" .vcf.gz)
+base_name=$(basename "$VCF_IND" .vcf.gz)
 path_list="/your/way/to/list/"
 
 # Initialiser le fichier de statistiques
-echo "FILTERING STATISTICS: RE (repeats) and HO (heterozygosity) for ${VCF_ALL}" > filter.RE.HO.snp.${chr}.txt
+echo "FILTERING STATISTICS: RE (repeats) and HO (heterozygosity) for ${VCF_IND}" > filter.RE.HO.snp.${chr}.txt
 echo "----------------------------------------" >> filter.RE.HO.snp.${chr}.txt
 echo "Date: $(date)" >> filter.RE.HO.snp.${chr}.txt
 echo "" >> filter.RE.HO.snp.${chr}.txt
@@ -22,7 +22,7 @@ echo "" >> filter.RE.HO.snp.${chr}.txt
 
 echo "Calculating observed heterozygosity (Ho) per site..." >> filter.RE.HO.snp.${chr}.txt
 echo "" >> filter.RE.HO.snp.${chr}.txt
-vcftools --gzvcf $VCF_ALL --keep ${path_list}/ind_list.list --hardy --out ${base_name}
+vcftools --gzvcf $VCF_IND --keep ${path_list}/ind_list.list --hardy --out ${base_name}
 
 # Remove sites located within repeated regions
 echo "Filtering out SNPs located in transposable elements or other repeated regions..." >> filter.RE.HO.snp.${chr}.txt
@@ -36,7 +36,6 @@ awk 'NR>1' ${base_name}.hwe | awk '{split($3,el,"/"); if ((el[1]+el[2]+el[3])>0 
 bcftools view -T ^${path_list}/${base_name}.positions.HWE.list ${base_name}_masked.vcf.gz -Oz > ${base_name}_masked_HWE.vcf.gz
 bcftools index ${base_name}_masked_HWE.vcf.gz
 echo "Number of SNPs after Ho>70% filtering: $(gunzip -c ${base_name}_masked_HWE.vcf.gz | grep -c ^chr)" >> filter.RE.HO.snp.${chr}.txt
-
 rm ${base_name}.hwe ${base_name}_masked.vcf.gz
 
 # Summary of filtering
