@@ -2,6 +2,7 @@
 # Script for create the reference table
 # This version is designed for use on a cluster
 # (e.g., SLURM-based) to parallelize runs efficiently.
+# Create 3 differents directory for concomitent_div, recent_div and old_div
 #
 # Command to run 50,000 simulations in 100 batches of 500 each:
 # for i in $(seq 1 500 49501); do
