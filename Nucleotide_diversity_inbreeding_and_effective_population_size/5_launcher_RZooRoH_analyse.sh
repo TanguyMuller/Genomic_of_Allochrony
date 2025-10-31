@@ -3,7 +3,7 @@
 # Note: launch this in parallel in slurm environemen
 #
 # Command
-# bash r_launcher_RZooRoH_analyse.sh 
+# bash 5_launcher_RZooRoH_analyse.sh ind__10covperpool.vcf.gz
 
 dataset=$1
 
