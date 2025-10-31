@@ -1,10 +1,15 @@
 #!/bin/bash 
+# Script to filter SNPs without 10 reads per pool
+# and estimate the allele frequency from pools
+# for RZooRoH analyses.
+#
+# Command
+# bash 4_freq_alleliq_pool.sh ind.vcf.gz Auto
 
-dataset=$1
-path_vcf="/work/project/loadexp/analyses_tanguy/Exp/vcf"
-path_list="/work/project/loadexp/analyses_tanguy/Exp/list"
-path_script="/work/project/loadexp/analyses_tanguy/Exp/Analyses/RZooRoH/script"
-base_name=$(basename "${dataset}" | sed 's/_pool//; s/\.vcf\.gz//')
+vcf=$1
+path_list="/your/path/to/list"
+path_script="/your/path/to/script"
+
 
 # Set directory for RZooRoH
 mkdir -p freq_alleliq
