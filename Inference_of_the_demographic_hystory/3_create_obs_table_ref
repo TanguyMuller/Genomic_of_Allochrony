@@ -1,0 +1,100 @@
+# Script for create reference table on real data
+library(reticulate)
+library(data.table)
+library(poolfstat)
+source_python(file = "compute_stat.py")
+
+# Create the pooldtata object
+pool.list <- c("01_SP_P", "02_WP_P", "03_FU_P")
+size <- c(100, 100, 80)
+
+# VCF with pool data from the demo_vcf.vcf.gz
+pooldata <- vcf2pooldata("demo.pool.vcf.gz",
+                    poolsizes = size,
+                    poolnames = pool.list,
+                    min.cov.per.pool = 10,
+                    min.rc = 2)
+
+# Stats on pools
+pool.fstats=compute.fstats(pooldata,verbose=FALSE)
+fst.id=pool.fstats@fst.values$Estimate
+heteros=pool.fstats@heterozygosities$Estimate
+f2=pool.fstats@f2.values$Estimate
+f3=pool.fstats@f3.values$Estimate
+fst.wc=computeFST(pooldata)$Fst[[1]]
+
+maf.SP=0.5-abs(0.5-(pooldata@refallele.readcount[,1]/pooldata@readcoverage[,1]))
+maf.WP=0.5-abs(0.5-(pooldata@refallele.readcount[,2]/pooldata@readcoverage[,2]))
+maf.FU=0.5-abs(0.5-(pooldata@refallele.readcount[,3]/pooldata@readcoverage[,3]))
+pfix=c(mean(maf.SP==0),mean(maf.WP==0),mean(maf.FU==0))
+alt.SP=0.5-(0.5-(pooldata@refallele.readcount[,1]/pooldata@readcoverage[,1]))
+alt.WP=0.5-(0.5-(pooldata@refallele.readcount[,2]/pooldata@readcoverage[,2]))
+alt.FU=0.5-(0.5-(pooldata@refallele.readcount[,3]/pooldata@readcoverage[,3]))
+pfix.alt=c(mean(alt.SP==0),mean(alt.WP==0),mean(alt.FU==0))
+pfix.ref=c(mean(alt.SP==1),mean(alt.WP==1),mean(alt.FU==1))
+
+# Stat on individuals
+hsp <- read.table("het_ind/SP.het.txt")
+hetsp <- mean(hsp[, 1])
+hwp <- read.table("het_ind/WP.het.txt")
+hetwp <- mean(hwp[, 1])
+hfu <- read.table("het_ind/FU.het.txt")
+hetfu <- mean(hfu[, 1])
+
+TDsp <- read.table("TajimaD/SP.TajimaD.txt")
+TajDsp <- mean(TDsp[, 1], na.rm=TRUE)
+TDwp <- read.table("TajimaD/WP.TajimaD.txt")
+TajDwp <- mean(TDwp[, 1], na.rm=TRUE)
+TDfu <- read.table("TajimaD/FU.TajimaD.txt")
+TajDfu <- mean(TDfu[, 1],na.rm = TRUE)
+
+sp <- read.table("SFS/SP.SFS.txt")
+total_sum_sp <- sum(sp$V1)
+sfssp <- sp$V1/total_sum_sp
+wp <- read.table("SFS/WP.SFS.txt")
+total_sum_wp <- sum(wp$V1)
+sfswp <- wp$V1/total_sum_wp
+fu <- read.table("SFS/FU.SFS.txt")
+total_sum_fu <- sum(fu$V1)
+sfsfu <- fu$V1/total_sum_fu
+
+sp_haplotype_matrix=read.table("matrix_haplotype/sp.haplo.txt")
+wp_haplotype_matrix=read.table("matrix_haplotype/wp.haplo.txt")
+fu_haplotype_matrix=read.table("matrix_haplotype/fu.haplo.txt")
+sp_haplotype_matrix <- as.matrix(sp_haplotype_matrix)
+wp_haplotype_matrix <- as.matrix(wp_haplotype_matrix)
+fu_haplotype_matrix <- as.matrix(fu_haplotype_matrix)
+
+stat_uhl_spwp <- get_stat_pop_from_haplo(sp_haplotype_matrix, wp_haplotype_matrix)
+stat_uhl_spwp_vec <- unlist(stat_uhl_spwp)
+stat_uhl_spwp_vec <- c(stat_uhl_spwp_vec[1], stat_uhl_spwp_vec[2], tail(stat_uhl_spwp_vec, 8))
+
+stat_uhl_spfu <- get_stat_pop_from_haplo(sp_haplotype_matrix, fu_haplotype_matrix)
+stat_uhl_spfu_vec <- unlist(stat_uhl_spfu)
+stat_uhl_spfu_vec <- c(stat_uhl_spfu_vec[1], stat_uhl_spfu_vec[2], tail(stat_uhl_spfu_vec, 8))
+
+stat_uhl_wpfu <- get_stat_pop_from_haplo(wp_haplotype_matrix, fu_haplotype_matrix)
+stat_uhl_wpfu_vec <- unlist(stat_uhl_wpfu)
+stat_uhl_wpfu_vec <- c(stat_uhl_wpfu_vec[1], stat_uhl_wpfu_vec[2], tail(stat_uhl_wpfu_vec, 8))
+
+tmp.out=c(fst.wc,fst.id,heteros,hetsp,hetwp,hetfu,f2,f3,pfix,pfix.alt,pfix.ref,TajDsp,TajDwp,TajDfu,stat_uhl_spwp_vec,stat_uhl_spfu_vec,stat_uhl_wpfu_vec,sfssp,sfswp,sfsfu)
+
+SP_classes <- paste("SPclasse", 0:50, sep = "")
+WP_classes <- paste("WPclasse", 0:36, sep = "")
+FU_classes <- paste("FUclasse", 0:20, sep = "")
+names(tmp.out)=c("FSTwc","FSTidSPWP","FSTidSPFU","FSTidWPFU","HetSP","HetWP","HetFU","het.indSP","het.indWP","het.indFU","f2SPWP","f2SPFU",
+                 "f2WPFU","f3SP","f3WP","f3FU","PfixSP","PfixWP","PfixFU","Pfix.altSP","Pfix.altWP","Pfix.altFU","Pfix.refSP","Pfix.refWP","Pfix.refFU",
+                 "DTajimaSP","DTajimaWP","DTajimaFU",'Rf_stat_pop_spwp','Rs_stat_pop_spwp','Wx2s1_stat_pop_spwp','Wx1s2_stat_pop_spwp','Wx1F_stat_pop_spwp','Wx2F_stat_pop_spwp','Wx1_new_stat_pop_spwp',
+                 'Wx2_new_stat_pop_spwp','Wx1F_new_stat_pop_spwp','Wx2F_new_stat_pop_spwp','Rf_stat_pop_spfu','Rs_stat_pop_spfu','Wx2s1_stat_pop_spfu','Wx1s2_stat_pop_spfu','Wx1F_stat_pop_spfu',
+                 'Wx2F_stat_pop_spfu','Wx1_new_stat_pop_spfu','Wx2_new_stat_pop_spfu','Wx1F_new_stat_pop_spfu','Wx2F_new_stat_pop_spfu','Rf_stat_pop_wpfu','Rs_stat_pop_wpfu','Wx2s1_stat_pop_wpfu',
+                 'Wx1s2_stat_pop_wpfu','Wx1F_stat_pop_wpfu','Wx2F_stat_pop_wpfu','Wx1_new_stat_pop_wpfu','Wx2_new_stat_pop_wpfu','Wx1F_new_stat_pop_wpfu','Wx2F_new_stat_pop_wpfu',SP_classes,WP_classes,FU_classes)
+tmp.out
+
+file.name<-"obs_table_ref"
+cat(file = file.name,c("FSTwc","FSTidSPWP","FSTidSPFU","FSTidWPFU","HetSP","HetWP","HetFU","het.indSP","het.indWP","het.indFU","f2SPWP","f2SPFU",
+                         "f2WPFU","f3SP","f3WP","f3FU","PfixSP","PfixWP","PfixFU","Pfix.altSP","Pfix.altWP","Pfix.altFU","Pfix.refSP","Pfix.refWP","Pfix.refFU",
+                         "DTajimaSP","DTajimaWP","DTajimaFU",'Rf_stat_pop_spwp','Rs_stat_pop_spwp','Wx2s1_stat_pop_spwp','Wx1s2_stat_pop_spwp','Wx1F_stat_pop_spwp','Wx2F_stat_pop_spwp','Wx1_new_stat_pop_spwp',
+                         'Wx2_new_stat_pop_spwp','Wx1F_new_stat_pop_spwp','Wx2F_new_stat_pop_spwp','Rf_stat_pop_spfu','Rs_stat_pop_spfu','Wx2s1_stat_pop_spfu','Wx1s2_stat_pop_spfu','Wx1F_stat_pop_spfu',
+                         'Wx2F_stat_pop_spfu','Wx1_new_stat_pop_spfu','Wx2_new_stat_pop_spfu','Wx1F_new_stat_pop_spfu','Wx2F_new_stat_pop_spfu','Rf_stat_pop_wpfu','Rs_stat_pop_wpfu','Wx2s1_stat_pop_wpfu',
+                         'Wx1s2_stat_pop_wpfu','Wx1F_stat_pop_wpfu','Wx2F_stat_pop_wpfu','Wx1_new_stat_pop_wpfu','Wx2_new_stat_pop_wpfu','Wx1F_new_stat_pop_wpfu','Wx2F_new_stat_pop_wpfu',SP_classes,WP_classes,FU_classes),"\n")
+cat(file=file.name,tmp.out,"\n",append=TRUE)
