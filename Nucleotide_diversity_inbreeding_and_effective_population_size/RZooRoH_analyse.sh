@@ -17,7 +17,11 @@ pop=$2
 path_list="/your/path/to/list"
 path_script="/your/path/to/script"
 base_name=$(basename "${dataset}" .vcf.gz)
+
+# Create output directories
 mkdir -p vcf
+mkdir -p results
+mkdir -p GL
 
 # Create a VCF for each population
 bcftools view -S ${path_list}/${pop}_ind.list -T ${path_list}/positions_${base_name}.txt --force-samples -Oz ${dataset} > vcf/${pop}_${base_name}.vcf.gz
