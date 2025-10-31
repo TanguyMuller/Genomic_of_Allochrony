@@ -19,7 +19,7 @@ j=k+as.numeric(args[2])-1
 for (seed in k:j) {
 	nsample=1 ; 
 	nchr=1000L ; chr_length=1e4 #1,000 chromosome of 10,000 pb
-	lambda.cov=50 ; eps=0.001 #parameter for simulate pool data
+	lambda.cov=50 ; eps=0.001 #parameters for simulate pool data
 	maf.thr=0.00 ; min.rc=2
 	exp.eps=0.01 ; nthreads=1
 	set.seed(seed)
@@ -29,7 +29,7 @@ for (seed in k:j) {
                 		 m_spwp_anc,m_spwp_rec,m_spfu_anc,m_spfu_rec,m_wpfu_anc,m_wpfu_rec,
 						 n_sp,n_wp,n_fu,nchr,chr_length,min.rc,maf.thr,seed,n_cpu,seed_dr){    
 
-    # First run simulaton for have count data
+    # First run simulation for have count data
 	G = simu_recent_div(Ne_ancpp=Ne_ancpp,Ne_fu=Ne_fu,Ne_wp=Ne_wp,Ne_sp=Ne_sp,Ne_sp_found=Ne_sp_found,Ne_wp_found=Ne_wp_found,Ne_fu_ancfound=Ne_fu_ancfound,Ne_fu_anc=Ne_fu_anc,Ne_wp_anc=Ne_wp_anc,
 	               Ne_bot_sp=Ne_bot_sp,Ne_bot_wp=Ne_bot_wp,Ne_bot_fu=Ne_bot_fu,Ne_wp_ancfound=Ne_wp_ancfound,m_spfu_rec=m_spfu_rec,m_wpfu_rec=m_wpfu_rec,m_ancpp=m_ancpp,
 	               tsplit_PP=tsplit_PP,tsplit_WP=tsplit_WP,t_bot=t_bot,m_spwp_anc=m_spwp_anc,m_spwp_rec=m_spwp_rec,m_spfu_anc=m_spfu_anc,m_wpfu_anc=m_wpfu_anc,
