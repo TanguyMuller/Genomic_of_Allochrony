@@ -1,4 +1,4 @@
-### Script for create gVCF file of each chr 
+### Script for create gVCF file with portuguese individuals of each chromosome 
 
 #! /bin/bash
 
