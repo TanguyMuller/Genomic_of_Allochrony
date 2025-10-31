@@ -13,8 +13,6 @@ base_name=$(basename "$vcf" .vcf.gz)
 
 # Prepare output directories
 mkdir -p freq_alleliq
-mkdir -p results
-mkdir -p GL
 
 # Run the R script that computes allele frequencies per pool
 echo "Estimating allele frequencies for ${vcf}..."
