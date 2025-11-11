@@ -1,4 +1,4 @@
-# Script to prepare input data for genetic load analysis.
+# Script to prepare input data for genetic load analysis on autosomes.
 
 library(tidyverse)
 library(dplyr)
