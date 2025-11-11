@@ -10,6 +10,8 @@ mkdir -p "${PATH_TO_FOLDER}/list"
 
 # Extract positions (CHROM, POS) from the VCF
 gunzip -c "${PATH_TO_FOLDER}/vcf/demo.portugal.vcf.gz" | grep -v "^#" | awk '{print $1"\t"$2}' > "${PATH_TO_FOLDER}/list/positions_load_vcf.txt"
+gunzip -c "${PATH_TO_FOLDER}/vcf/Z.demo.portugal.vcf.gz" | grep -v "^#" | awk '{print $1"\t"$2}' > "${PATH_TO_FOLDER}/list/Z_positions_load_vcf.txt"
 
 # Create mpileup for outgroups restricted to VCF positions
 samtools mpileup -B --ignore-RG -f "${PATH_TO_ASSEMBLY}" -l "${PATH_TO_FOLDER}/list/positions_load_vcf.txt" -b list_ind_bam_outgroup.txt > "${PATH_TO_FOLDER}/mpileup/load_outgroup.mpileup"
+samtools mpileup -B --ignore-RG -f "${PATH_TO_ASSEMBLY}" -l "${PATH_TO_FOLDER}/list/Z_positions_load_vcf.txt" -b list_ind_bam_outgroup.txt > "${PATH_TO_FOLDER}/mpileup/Z_load_outgroup.mpileup"
