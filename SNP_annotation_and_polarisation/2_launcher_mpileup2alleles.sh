@@ -5,3 +5,7 @@
 perl script/mpileup2allelesOutgroup_extract_3_og.pl \
   mpileup/load_outgroup.mpileup \
   mpileup/load_outgroup.txt
+
+perl script/mpileup2allelesOutgroup_extract_3_og.pl \
+  mpileup/Z_load_outgroup.mpileup \
+  mpileup/Z_load_outgroup.txt
