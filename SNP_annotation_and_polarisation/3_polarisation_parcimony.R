@@ -4,6 +4,7 @@
 # Run 1_create_mpileup.sh and 2_launcher_mpileup2alleles.sh before running this script.
 
 outgroup_compil <- read.delim("mpileup/load_outgroup.txt")
+#outgroup_compil <- read.delim("mpileup/Z_load_outgroup.txt")
 
 # ----------------------------
 # Function to process outgroups
