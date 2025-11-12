@@ -3,14 +3,18 @@
 library(tidyverse)
 library(dplyr)
 
+nSP=25
+#nSP=15
+nWP=18
+#nWP=12
+nFU=10
+
 # Load genotype data
 all <- read.delim("vcf/load.all.GT.txt", skip=1, header=FALSE)
 #all <- read.delim("vcf/Z.load.all.GT.txt", skip=1, header=FALSE)
-SP <- paste0("SP_", 1:25)
-#SP <- paste0("SP_", 1:15)
-WP <- paste0("WP_", 1:18)
-#WP <- paste0("WP_", 1:12)
-FU <- paste0("FU_", 1:10)
+SP <- paste0("SP_", 1:nSP)
+WP <- paste0("WP_", 1:nWP)
+FU <- paste0("FU_", 1:nFU)
 
 colnames(all) <- c("Chromosome", 
                    "position", 
@@ -54,7 +58,7 @@ table(all$cat1)
 # Calculate for SP population
 results_SP <- data.frame()
 
-for (i in 1:25) {
+for (i in 1:nSP) {
   colname <- paste0("SP_", i)
   
   # Calculate heterozygosity for each category
@@ -84,7 +88,7 @@ print(results_SP)
 # Calculate for WP population
 results_WP <- data.frame()
 
-for (i in 1:18) {
+for (i in 1:nWP) {
   colname <- paste0("WP_", i)
   
   NS <- all[!is.na(all$cat1) & all$cat1 == "MIS", ]
@@ -113,7 +117,7 @@ print(results_WP)
 # Calculate for FU population
 results_FU <- data.frame()
 
-for (i in 1:10) {
+for (i in 1:nFU) {
   colname <- paste0("FU_", i)
   
   NS <- all[!is.na(all$cat1) & all$cat1 == "MIS", ]
@@ -141,7 +145,7 @@ print(results_FU)
 
 # Combine results
 piN_piS <- rbind(results_SP, results_WP, results_FU)
-piN_piS$pop <- c(rep("LSP", 25), rep("LWP", 18), rep("FU", 10))
+piN_piS$pop <- c(rep("LSP", nSP), rep("LWP", nWP), rep("FU", nFU))
 
 piN_piS$pop <- factor(piN_piS$pop, levels = c("LSP", "LWP", "FU"))
 color_pinpis <- c("brown1", "cadetblue3", "chartreuse3")
@@ -173,6 +177,7 @@ save(pin_pis, piN_piS, file = "pin_pis_all.RData")
 
 # Statistical tests for PiN/PiS
 load("pin_pis_all.RData")
+#load("Z_pin_pis_all.RData")
 shapiro_test_results <- by(piN_piS$PiN_PiS_Ho, interaction(piN_piS$pop), shapiro.test)
 shapiro_test_results
 
