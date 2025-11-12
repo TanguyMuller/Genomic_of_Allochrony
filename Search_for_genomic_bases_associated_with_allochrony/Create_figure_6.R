@@ -16,15 +16,20 @@ library(gtable)
 library(openxlsx)
 options(scipen = 999)
 
-
-
 #-----------------------------------------------------------
 # Create plots for genomic regions
 #-----------------------------------------------------------
 
 # Load Baypass result
-load("path/to/baypass_results.RData")
-source("path/to/baypass_utils.R")
+load("baypass_combine.RData")
+source("baypass_utils.R")
+
+local_score_fb_c2_SP_WP<-compute.local.scores(snp.position = Z[,1:2],                 
+                        snp.pi = Z_pi$M_P,                      
+                        snp.pvalue=Z$log,             
+                        xi=2,                       
+                        min.maf=0.2,plot.pvalhist=F,         
+                        manplot=TRUE)
 q1 <- quantile(local_score_fb_c2_SP_WP$res.local.scores$lindley, 0.99)
 
 # Define genomic windows
@@ -38,7 +43,7 @@ for (z in 1:length(position_pairs)) {
   start_win <- pair[1]
   end_win <- pair[2]
   
-  # Load gene annotations
+  # Load gene annotations : all genes in the interest region
   genes_Z_10 <- read.xlsx(paste0("path/to/gene_annotations/", start_win, "_", 
                                  end_win, "_genes.xlsx"))
   
@@ -54,7 +59,7 @@ for (z in 1:length(position_pairs)) {
   }
   
   genes_Z_10$vertical_position <- rep(1:4, length.out = nrow(genes_Z_10))
-  genes_Z_10$show_number <- genes_Z_10$circadian %in% c("yes", "maybe") | 
+  genes_Z_10$show_number <- genes_Z_10$circadian %in% c("yes", "no") | 
                            genes_Z_10$numero == first_num | 
                            genes_Z_10$numero == last_num
   
@@ -118,7 +123,7 @@ for (z in 1:length(position_pairs)) {
     labs(title = "", x = "", y = expression(C[2]~"Local-score"))
   
   # Plot 3: FST scan
-  load("/path/to/fst/result/fst_sliding.RData")
+  load("fst_with_mutations_sliding_window.RData")
   quantile_95_fst <- quantile(fst_df$fst, 0.95)
   
   graph3 <- ggplot(fst_df, aes(x = pos, y = fst)) +
