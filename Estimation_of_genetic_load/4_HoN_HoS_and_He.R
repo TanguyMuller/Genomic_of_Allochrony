@@ -4,9 +4,12 @@ library(tidyverse)
 library(dplyr)
 
 # Load genotype data
-all <- read.delim("vcf/load.all.GT.txt", skip=1, header=FALSE) 
+all <- read.delim("vcf/load.all.GT.txt", skip=1, header=FALSE)
+#all <- read.delim("vcf/Z.load.all.GT.txt", skip=1, header=FALSE)
 SP <- paste0("SP_", 1:25)
+#SP <- paste0("SP_", 1:17)
 WP <- paste0("WP_", 1:18)
+#WP <- paste0("WP_", 1:12)
 FU <- paste0("FU_", 1:10)
 
 colnames(all) <- c("Chromosome", 
@@ -35,6 +38,14 @@ all$intergenic_position_status <- as.factor(ifelse(all$SNPEFF_2=="intergenic_reg
 
 all <- all[!is.na(all$intergenic_position_status), ]
 all$SNPbi <- paste(all$Chromosome,"__",all$position, sep="")
+
+# Add categories annotation
+all$cat1 <- "other" 
+all[!is.na(all$intergenic_position_status) & all$intergenic_position_status=="INTERGENIC" , ]$cat1 <- "IG"
+all[all$SNPEFF_3=="LOW" & all$exon_position_status=="EXON",]$cat1 <- "SYN"
+all[all$SNPEFF_3=="MODERATE",]$cat1 <- "MIS"
+all[all$SNPEFF_3=="HIGH" & all$exon_position_status=="EXON",]$cat1 <- "LOF"
+table(all$cat1)
 
 #-----------------------------------------------------------
 # 1. PiN/PiS ratio per individual (based on observed heterozygosity)
@@ -129,9 +140,8 @@ for (i in 1:10) {
 print(results_FU)
 
 # Combine results
-piN_piS_Z <- rbind(results_SP, results_WP, results_FU)
-piN_piS_Z$pop <- c(rep("LSP", 25), rep("LWP", 18), rep("FU", 10))
-piN_piS <- piN_piS_Z
+piN_piS <- rbind(results_SP, results_WP, results_FU)
+piN_piS$pop <- c(rep("LSP", 25), rep("LWP", 18), rep("FU", 10))
 
 piN_piS$pop <- factor(piN_piS$pop, levels = c("LSP", "LWP", "FU"))
 color_pinpis <- c("brown1", "cadetblue3", "chartreuse3")
@@ -159,6 +169,7 @@ pin_pis <- ggplot(data=piN_piS, aes(pop, PiN_PiS_Ho, fill=pop)) +
 pin_pis
 
 save(pin_pis, piN_piS, file = "pin_pis_all.RData")
+#save(pin_pis, piN_piS, file = "Z_pin_pis_all.RData")
 
 # Statistical tests for PiN/PiS
 load("pin_pis_all.RData")
@@ -409,7 +420,9 @@ He_plot <- ggplot(df_He, aes(x = category, y = value, fill = category)) +
 He_plot
 
 save(df_He, He_plot, line_df_median, file = "He_plot.RData")
+#save(df_He, He_plot, line_df_median, file = "Z_He_plot.RData")
 save(piN_piS, pin_pis, file = "pin_pis_all.RData")
+#save(piN_piS, pin_pis, file = "Z_pin_pis_all.RData")
 
 #-----------------------------------------------------------
 # 3. Statistical tests for He
