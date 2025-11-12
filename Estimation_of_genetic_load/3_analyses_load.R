@@ -50,8 +50,8 @@ results_FU <- count_categories(tab_pola, "FU", nFU, categories)
 results <- c(results_SP, results_WP, results_FU)
 
 # Create dataframe with genotype counts
-pop <- c(rep("LSP", 300), rep("LWP", 216), rep("FU", 120))
-state <- rep(c("Homozygous Ancestral", "Heterozygous", "Homozygous Derived"), times = 212)
+pop <- c(rep("LSP", nSP*12), rep("LWP", nWP*12), rep("FU", nFU*12))
+state <- rep(c("Homozygous Ancestral", "Heterozygous", "Homozygous Derived"), times = ((nSP*12 + nWP*12 + nFU*12)/3)
 values <- unlist(results)
 individus <- c(rep(rep(1:nSP, each = 3), 4), rep(rep(1:nWP, each = 3), 4), rep(rep(1:nFU, each = 3), 4))
 categorie <- c(rep("IG", (3 * nSP)), rep("SYN", (3 * nSP)), rep("MIS", (3 * nSP)), rep("LOF", (3 * nSP)),
@@ -78,6 +78,7 @@ df_median$state <- factor(df_median$state, levels = c("Homozygous Ancestral", "H
 
 # Add total SNP counts
 total_snps <- c(IG = 2348849, SYN = 47248, MIS = 29437, LOF = 374)
+#total_snps <- c(IG=52430, SYN=1742, MIS=1155, LOF=12)
 df_median$Category_label <- total_snps[as.character(df_median$categorie)]
 df_median$categorie <- factor(df_median$categorie, levels = c("IG", "SYN", "MIS", "LOF"))
 
@@ -276,7 +277,9 @@ p4 <- ggplot(sp, aes(x = bin, y = Frequency, group = cat)) +
   geom_line(aes(color = factor(cat, levels = cat_order)), size = 2) +
   scale_color_manual(values = c("palevioletred1", "darkorange", "red", "darkred")) +
   labs(title = "FU Autosomes", x = "Derived allele frequency", y = "Frequency", color = "") +
+  #labs(title = "FU chromosome Z", x = "Derived allele frequency", y = "Frequency", color = "") +
   ylim(0, 0.5) +
+  #ylim(0, 0.7) +
   scale_x_continuous(breaks = seq(0, 1, by = 0.1)) +
   theme(
     plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
@@ -331,6 +334,8 @@ p2 <- ggplot(sp, aes(x = bin, y = Frequency, group = cat)) +
   scale_color_manual(values = c("palevioletred1", "darkorange", "red", "darkred")) +
   labs(title = "LSP Autosomes", x = "Allele count", y = "Frequency", color = "") +
   ylim(0, 0.5) +
+  #labs(title = "LSP Chromosome Z", x = "Allele count", y = "Frequency", color = "") +
+  #ylim(0, 0.7) +
   scale_x_continuous(breaks = seq(0, 1, by = 0.1)) +
   theme(
     plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
@@ -385,6 +390,8 @@ p3 <- ggplot(sp, aes(x = bin, y = Frequency, group = cat)) +
   scale_color_manual(values = c("palevioletred1", "darkorange", "red", "darkred")) +
   labs(title = "LWP Autosomes", x = "Allele count", y = "Frequency", color = "") +
   ylim(0, 0.5) +
+  #labs(title = "LWP Chromosome Z", x = "Allele count", y = "Frequency", color = "") +
+  #ylim(0, 0.7) +
   scale_x_continuous(breaks = seq(0, 1, by = 0.1)) +
   theme(
     plot.title = element_text(hjust = 0.5, size = 18, face = "bold"),
