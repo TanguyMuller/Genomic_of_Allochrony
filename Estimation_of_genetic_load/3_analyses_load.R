@@ -9,11 +9,14 @@ library(scales)
 library(patchwork)
 
 load("table_pola.RData")
+#load("Z_table_pola.RData")
 
 # Define populations and sample sizes
 det.pop <- c("SP", "WP", "FU")
 nSP <- 25
+#nSP <- 15
 nWP <- 18
+#nWP <- 12
 nFU <- 10
 
 #-----------------------------------------------------------
@@ -30,7 +33,9 @@ count_categories <- function(df, prefix, n_columns, categories) {
     for (i in 1:n_columns) {
       col_name <- paste0(prefix, "_", i)
       freq <- table(df_cat[[col_name]])
-      results_cat[[col_name]] <- freq
+      freq_complete <- c("0/0" = 0, "0/1" = 0, "1/1" = 0)
+      freq_complete[names(freq)] <- freq
+      results_cat[[col_name]] <- freq_complete
     }
     results[[cat]] <- results_cat
   }
@@ -128,6 +133,7 @@ count <- ggplot(df_median, aes(x = categorie, y = proportion, fill = state)) +
 
 count
 save(count, df_median, line_df_median_count, file = "count.RData")
+#save(count, df_median, line_df_median_count, file = "Z_count.RData")
 
 # Total derived allele count
 df_new <- nb_cat %>%
@@ -218,6 +224,7 @@ for (i in 1:nrow(Rxy)) {
 }
 
 save(Rxy, file = "Rxy.RData")
+#save(Rxy, file = "Z_Rxy.Rdata")
 
 # Statistical test example
 Rxy_SP_FU <- Rxy[Rxy$comparaison == "LWP/FU", ]
@@ -398,6 +405,7 @@ p3 <- ggplot(sp, aes(x = bin, y = Frequency, group = cat)) +
 
 # Save combined SFS plot
 pdf("INTERGENIC-EXON_SFS_fixed_sites.pdf", width = 20, height = 8)
+#pdf("Z_INTERGENIC-EXON_SFS_fixed_sites.pdf", width = 20, height = 8)
 tryCatch({
   combined_plot <- (p2 + p3 + p4) + plot_layout(ncol = 3)
   print(combined_plot)
@@ -413,6 +421,9 @@ dev.off()
 SP_WP <- tab_pola[, c(182:184)]
 SP_FU <- tab_pola[, c(182:183,185)]
 WP_FU <- tab_pola[, c(182,184:185)]
+#SP_WP <- tab_pola[, c(134:136)]
+#SP_FU <- tab_pola[, c(134:135,137)]
+#WP_FU <- tab_pola[, c(134,136,137)]
 
 categories <- c("IG", "SYN", "MIS", "LOF")
 
@@ -582,3 +593,4 @@ for (cat in categories) {
 all_plots <- c(plot_list_SP_WP, plot_list_SP_FU, plot_list_WP_FU)
 combined_plot <- wrap_plots(all_plots, ncol = 4)
 ggsave("combined_SFS_joint.pdf", combined_plot, width = 2000/72, height = 1200/72)
+#ggsave("Z_combined_SFS_joint.pdf", combined_plot, width = 2000/72, height = 1200/72)
