@@ -111,7 +111,6 @@ for (i in 1:nrow(chrInf)) {
 # ================================================================
 # 2. Panel B – Local score plot for chromosome Z
 # ================================================================
-load("baypass_Z.RData")
 
 # Panel B label
 par(mar = c(3, 1, 6, 0), mgp = c(6, 1, 0))
@@ -120,12 +119,19 @@ text(0.5, 0.95, "B)", cex = 5, font = 1)
 
 # Load BayPass results for chromosome Z
 par(mar = c(3, 10, 6, 4), mgp = c(6, 1, 0))
-load("baypass_Z.RData")
 
 # Load circadian genes for chromosome Z
 genesZ <- read.xlsx("genes_circadian_Z.xlsx")
 genesZ$mid <- (genesZ$start + genesZ$end) / 2
 matching_lines <- genesZ$mid  
+
+# Measure the local-score on the Z chromosome
+local_score_fb_c2_SP_WP_Z<-compute.local.scores(snp.position = Z[,1:2],   
+                        snp.pi = Z_pi$M_P,                     
+                        snp.pvalue=Z$log,            
+                        xi=2,                        
+                        min.maf=0.2,plot.pvalhist=F,        
+                        manplot=F)
 
 q1 <- quantile(local_score_fb_c2_SP_WP_Z$res.local.scores$lindley, 0.99)
 
@@ -165,7 +171,6 @@ lines(x = range(local_score_fb_c2_SP_WP_Z$res.local.scores$pos), y = rep(q1, 2),
 # ================================================================
 # 3. Panel C – FST sliding window plot (overview)
 # ================================================================
-load("fst_sliding_window.RData")
 
 # Panel C label
 par(mar = c(3, 1, 3, 0))
@@ -174,7 +179,7 @@ text(0.1, 0.95, "C)", cex = 5, font = 1)
 
 # Load sliding window FST data
 par(mar = c(3, 10, 3, 4))
-load("fst_sliding_windows.RData")
+load("fst_sliding_window.RData")
 
 # Base FST plot
 plot(fst1$CumMidPos, fst1$MultiLocusFst,
