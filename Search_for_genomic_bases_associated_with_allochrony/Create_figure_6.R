@@ -155,7 +155,7 @@ for (z in 1:length(position_pairs)) {
     labs(title = "", x = "", y = expression(F[ST] ~ "values"))
   
   # Plot 4: Nucleotide diversity (Pi)
-  load("path/to/pi_data.RData")
+  load("pi.RData")
   pi_SP$mid <- (pi_SP$window_pos_1 + pi_SP$window_pos_2) / 2
   pi_WP$mid <- (pi_WP$window_pos_1 + pi_WP$window_pos_2) / 2
   
@@ -194,8 +194,8 @@ for (z in 1:length(position_pairs)) {
     labs(title = "", x = "", y = expression(pi ~ "values"))
   
   # Plot 5: Tajima's D
-  D_taj <- read.table(paste0("path/to/tajima_d/chrZ_LSP_MAF005_2000.Tajima.D"), h = T)
-  D_taj_WP <- read.table(paste0("path/to/tajima_d/chrZ_LWP_MAF005_2000.Tajima.D"), h = T)
+  D_taj <- read.table("chrZ_LSP_MAF005_2000.Tajima.D"), h = T)
+  D_taj_WP <- read.table("chrZ_LWP_MAF005_2000.Tajima.D"), h = T)
   
   rolling_mean_taj <- rollmean(zoo(D_taj$TajimaD, order.by = D_taj$BIN_START),
                                k = 75, na.rm = TRUE)
@@ -234,7 +234,7 @@ for (z in 1:length(position_pairs)) {
     labs(title = "", x = "", y = "Tajima's D")
   
   # Plot 6: Read depth ratio
-  load("path/to/coverage_data.RData")
+  load("coverage.RData")
   
   quantile_5_couv <- quantile(result_df_SP$ratio, 0.01, na.rm = T)
   quantile_95_couv <- quantile(result_df_SP$ratio, 0.99, na.rm = T)
