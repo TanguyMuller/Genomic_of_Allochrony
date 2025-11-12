@@ -367,6 +367,7 @@ df_He$pop[df_He$pop == "SP"] <- "LSP"
 df_He$pop[df_He$pop == "WP"] <- "LWP"
 df_He$pop <- factor(df_He$pop, levels = c("LSP", "LWP", "FU"))
 df_He$Category_label <- rep(c(81099, 53136, 764, 3943762, 1000000), 3)
+#df_He$Category_label <- rep(c(2352,1772,22,84267, 1000000),3)
 
 # Create line dataframe for Y-axis
 population_names <- unique(df_He$pop)
@@ -428,15 +429,3 @@ save(df_He, He_plot, line_df_median, file = "He_plot.RData")
 #save(df_He, He_plot, line_df_median, file = "Z_He_plot.RData")
 save(piN_piS, pin_pis, file = "pin_pis_all.RData")
 #save(piN_piS, pin_pis, file = "Z_pin_pis_all.RData")
-
-#-----------------------------------------------------------
-# 3. Statistical tests for He
-#-----------------------------------------------------------
-all_sp <- all[, c(67, 68)]
-all_wp <- all[, c(67, 70)]
-all_fu <- all[, c(67, 72)]
-
-shapiro_test_results <- by(all_sp$pi_SP, interaction(all_sp$cat1), shapiro.test)
-kruskal.test(pi_SP ~ cat1, data = all_sp)
-library(FSA)
-dunnTest(pi_SP ~ cat1, data = all_sp, method = "bonferroni")
