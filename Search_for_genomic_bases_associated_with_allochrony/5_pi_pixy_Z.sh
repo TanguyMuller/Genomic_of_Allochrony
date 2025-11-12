@@ -4,7 +4,7 @@
 # gCVF file
 gvcf="gVCF.portugal.vcf.gz"
 
-bcftools -S SP_WP_males.list -r chrZ ${gvcf} -Oz > Z.SPWP.males.gVCF.vcf.gz
+bcftools view -S SP_WP_males.list -r chrZ ${gvcf} -Oz > Z.SPWP.males.gVCF.vcf.gz
 tabix -p vcf Z.SPWP.males.gVCF.vcf.gz
 
 # Run pixy to calculate nucleotide diversity (Pi)
