@@ -7,10 +7,13 @@ library(data.table)
 
 # Load VCF table (genotypes + SnpEff annotations)
 tab <- read.delim("vcf/load.ann.GT.txt", skip = 1, header = FALSE)
+#tab <- read.delim("vcf/Z.load.ann.GT.txt", skip = 1, header = FALSE)
 
 # Define population labels
 SP <- paste0("SP_", 1:25)
+#SP <- paste0("SP_", 1:17)
 WP <- paste0("WP_", 1:18)
+#WP <- paste0("WP_", 1:12)
 FU <- paste0("FU_", 1:10)
 pop <- c(SP, WP, FU)
 det.pop <- c("SP", "WP", "FU")
@@ -32,12 +35,15 @@ tab$intron_position_status <- as.factor(ifelse(tab$SNPEFF_2 == "intron_variant",
 tab$intergenic_position_status <- as.factor(ifelse(tab$SNPEFF_2 == "intergenic_region", "INTERGENIC", "not_intergenic"))
 
 cat(paste0("Initial number of SNPs: ", nrow(tab), "\n"), file = "statistiques_load.txt", append = TRUE)
+#cat(paste0("Initial number of SNPs: ", nrow(tab), "\n"), file = "Z_statistiques_load.txt", append = TRUE)
+
 
 ################################################
 # Load and merge outgroup data
 ################################################
 
 outgroup <- read.delim("polarized_result.txt")[, c(1, 14, 15)]
+#outgroup <- read.delim("Z_polarized_result.txt")[, c(1, 14, 15)]
 tab_all <- merge(tab, outgroup, by = "SNPbi", all = FALSE)
 rm(tab); gc()
 
@@ -93,6 +99,8 @@ tab_pola <- subset(tab_pola, !(AA2 == "t1?") | is.na(AA2))
 
 cat(paste0("Number of well-polarized SNPs: ", nrow(tab_pola), "\n"),
     file = "statistiques_load.txt", append = TRUE)
+#cat(paste0("Number of well-polarized SNPs: ", nrow(tab_pola), "\n"),
+#    file = "statistiques_load.txt", append = TRUE)
 
 ################################################
 # Compute allele counts and genotype categories
@@ -120,6 +128,8 @@ tab_pola <- tab_pola[tab_pola$total_allele_count < 106 & tab_pola$total_allele_c
 
 cat(paste0("Final number of SNPs: ", nrow(tab_pola), "\n"),
     file = "statistiques_load.txt", append = TRUE)
+#cat(paste0("Final number of SNPs: ", nrow(tab_pola), "\n"),
+#    file = "statistiques_load.txt", append = TRUE)
 
 ################################################
 # Functional annotation and effect prediction
@@ -145,6 +155,8 @@ tab_pola <- tab_pola[tab_pola$cat != "other", ]
 cat_counts <- as.vector(table(tab_pola$cat))
 cat(paste0("Number of polarized SNPs in exonic or intergenic regions: ", nrow(tab_pola), "\n"),
     file = "statistiques_load.txt", append = TRUE)
+#cat(paste0("Number of polarized SNPs in exonic or intergenic regions: ", nrow(tab_pola), "\n"),
+#    file = "statistiques_load.txt", append = TRUE)
 
 ################################################
 # Frequency computation and block assignment
@@ -166,3 +178,4 @@ block_size <- length(tab_pola$Chromosome) / JK_nbblocs
 tab_pola$block_label <- gl(JK_nbblocs, ceiling(block_size))[1:length(tab_pola$SNPbi)]
 
 save(file = "table_pola.RData", tab_pola)
+#save(file = "Z_table_pola.RData", tab_pola)
