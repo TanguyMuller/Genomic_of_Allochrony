@@ -55,38 +55,9 @@ df_combine[, 1:2] <- positions[, 1:2]
 df_combine$CONTRAST <- gsub("chr", "", df_combine$CONTRAST)
 df_combine$CONTRAST <- factor(df_combine$CONTRAST, levels = c(as.character(1:49), "Z"), ordered = TRUE)
 
-#-----------------------------------------------------------
-# 5. Compute local scores (Lindley process)
-#-----------------------------------------------------------
 Z <- df_combine[df_combine$CONTRAST == "Z", ]
 
-png(filename = "baypass_gl.png", width = 2000, height = 2500)
-par(mfrow = c(8, 1))
-
-local_score_fb_c2_SP_WP_combine<- compute.local.scores(
-  snp.position = df_combine[, 1:2],
-  snp.pi = df_pi$M_P,
-  snp.pvalue = df_combine$log,
-  xi = 2,
-  min.maf = 0.2,
-  plot.pvalhist = FALSE,
-  manplot = TRUE
-)
-
-local_score_fb_c2_SP_WP_Z <- compute.local.scores(
-  snp.position = Z[, 1:2],
-  snp.pi = Z_pi$M_P,
-  snp.pvalue = Z$log,
-  xi = 2,
-  min.maf = 0.2,
-  plot.pvalhist = FALSE,
-  manplot = TRUE
-)
-
-dev.off()
-
 #-----------------------------------------------------------
-# 6. Save results
+# 5. Save results
 #-----------------------------------------------------------
-save(local_score_fb_c2_SP_WP_combine, file = "baypass_combine.RData")
-save(local_score_fb_c2_SP_WP_Z, file = "baypass_Z.RData")
+save.image(file = "baypass_combine.RData")
