@@ -52,8 +52,10 @@ rm(tab); gc()
 ################################################
 
 tab_pola <- tab_all %>%
-  mutate(across(6:58, as.character)) %>%
+  mutate(across(6:58, as.character)) %>% 
+  #mutate(across(6:42, as.character)) %>% 
   mutate(across(6:58, ~ case_when(
+  #mutate(across(6:42, ~ case_when(
     REF_is_ANC == 1 & . == "0/0" ~ "0/0",
     REF_is_ANC == 0 & . == "0/0" ~ "1/1",
     . == "0/1" ~ "0/1",
@@ -71,7 +73,6 @@ tab_pola <- tab_pola[tab_pola$ancestral_allele %in% c(tab_pola$REF, tab_pola$ALT
 swap_indices <- which(tab_pola$REF_is_ANC == 0)
 tab_pola$ALT[swap_indices] <- tab_pola$REF[swap_indices]
 tab_pola$REF[swap_indices] <- tab_pola$ancestral_allele[swap_indices]
-tab_pola <- tab_pola[, -c(174, 175)]
 
 ################################################
 # Split genotype fields (0/0, 0/1, 1/1)
@@ -117,6 +118,7 @@ for (p in det.pop) {
   allele_col <- paste0(p, "_allele_count")
   statut_col <- paste0(p, "_statut")
   nb_allele <- ifelse(p == "SP", 50, ifelse(p == "WP", 36, 20))
+  #nb_allele <- ifelse(p == "SP", 30, ifelse(p == "WP", 24, 20))
   tab_pola[[statut_col]] <- ifelse(tab_pola[[allele_col]] == 0, "Homozygous Ancestral",
                             ifelse(tab_pola[[allele_col]] == nb_allele, "Homozygous Derived", "Heterozygous"))
 }
@@ -125,6 +127,7 @@ for (p in det.pop) {
 allele_count_cols <- paste0(det.pop, "_allele_count")
 tab_pola$total_allele_count <- rowSums(tab_pola[, allele_count_cols])
 tab_pola <- tab_pola[tab_pola$total_allele_count < 106 & tab_pola$total_allele_count > 0, ]
+#tab_pola <- tab_pola[tab_pola$total_allele_count < 74 & tab_pola$total_allele_count > 0, ]
 
 cat(paste0("Final number of SNPs: ", nrow(tab_pola), "\n"),
     file = "statistiques_load.txt", append = TRUE)
@@ -166,6 +169,7 @@ for (p in det.pop) {
   allele_col <- paste0(p, "_allele_count")
   freq_col <- paste0(p, "_freq_der")
   nb_allele <- ifelse(p == "SP", 50, ifelse(p == "WP", 36, 20))
+  #nb_allele <- ifelse(p == "SP", 30, ifelse(p == "WP", 24, 20))
   tab_pola[[freq_col]] <- tab_pola[[allele_col]] / nb_allele
 }
 
