@@ -11,7 +11,7 @@ tab <- read.delim("vcf/load.ann.GT.txt", skip = 1, header = FALSE)
 
 # Define population labels
 SP <- paste0("SP_", 1:25)
-#SP <- paste0("SP_", 1:17)
+#SP <- paste0("SP_", 1:15)
 WP <- paste0("WP_", 1:18)
 #WP <- paste0("WP_", 1:12)
 FU <- paste0("FU_", 1:10)
