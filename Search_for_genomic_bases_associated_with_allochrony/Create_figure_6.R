@@ -155,7 +155,9 @@ for (z in 1:length(position_pairs)) {
     labs(title = "", x = "", y = expression(F[ST] ~ "values"))
   
   # Plot 4: Nucleotide diversity (Pi)
-  load("pi.RData")
+  pi<-read.table("pixy_pi.txt",h=T)
+  pi_SP=pi[pi$pop=="SP",]
+  pi_WP=pi[pi$pop=="WP",]
   pi_SP$mid <- (pi_SP$window_pos_1 + pi_SP$window_pos_2) / 2
   pi_WP$mid <- (pi_WP$window_pos_1 + pi_WP$window_pos_2) / 2
   
